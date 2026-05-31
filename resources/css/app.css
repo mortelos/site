@@ -1,0 +1,154 @@
+@import 'tailwindcss';
+
+@source '../views/**/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer components {
+    .docs-prose {
+        color: var(--color-zinc-800);
+        line-height: 1.75;
+    }
+
+    .docs-prose h1 {
+        color: var(--color-zinc-950);
+        font-size: 2.25rem;
+        font-weight: 650;
+        line-height: 2.5rem;
+        letter-spacing: 0;
+    }
+
+    .docs-prose h2 {
+        scroll-margin-top: 5rem;
+        border-top: 1px solid var(--color-zinc-200);
+        color: var(--color-zinc-950);
+        font-size: 1.5rem;
+        font-weight: 650;
+        line-height: 2rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+    }
+
+    .docs-prose h3 {
+        scroll-margin-top: 5rem;
+        color: var(--color-zinc-950);
+        font-size: 1.125rem;
+        font-weight: 650;
+        line-height: 1.75rem;
+        margin-top: 2rem;
+    }
+
+    .docs-prose p,
+    .docs-prose ul,
+    .docs-prose ol,
+    .docs-prose table,
+    .docs-prose pre {
+        margin-top: 1rem;
+    }
+
+    .docs-prose .lead {
+        color: var(--color-zinc-600);
+        font-size: 1.0625rem;
+        line-height: 1.75rem;
+        margin-top: .5rem;
+    }
+
+    .docs-prose a {
+        color: var(--color-teal-700);
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .docs-prose ul {
+        list-style: disc;
+        padding-left: 1.25rem;
+    }
+
+    .docs-prose ol {
+        list-style: decimal;
+        padding-left: 1.25rem;
+    }
+
+    .docs-prose li + li {
+        margin-top: .4rem;
+    }
+
+    .docs-prose table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+        font-size: .875rem;
+    }
+
+    .docs-prose th {
+        background: var(--color-zinc-50);
+        color: var(--color-zinc-950);
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .docs-prose th,
+    .docs-prose td {
+        border: 1px solid var(--color-zinc-200);
+        padding: .625rem .75rem;
+        vertical-align: top;
+    }
+
+    .docs-prose :not(pre) > code {
+        border: 1px solid var(--color-zinc-200);
+        border-radius: .25rem;
+        background: var(--color-zinc-50);
+        color: var(--color-zinc-950);
+        font-size: .875em;
+        padding: .125rem .25rem;
+    }
+
+    .docs-prose pre {
+        position: relative;
+        overflow-x: auto;
+        border: 1px solid var(--color-zinc-800);
+        border-radius: .5rem;
+        background: #09090b;
+        color: var(--color-zinc-100);
+        font-size: .8125rem;
+        line-height: 1.65;
+        padding: 1rem;
+    }
+
+    .docs-prose pre code {
+        color: inherit;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .docs-copy-button {
+        position: absolute;
+        right: .75rem;
+        top: .75rem;
+        border: 1px solid rgb(63 63 70);
+        border-radius: .25rem;
+        background: rgb(24 24 27);
+        color: rgb(244 244 245);
+        font-size: .75rem;
+        line-height: 1rem;
+        padding: .25rem .5rem;
+    }
+
+    @media (max-width: 640px) {
+        .docs-prose h1 {
+            font-size: 1.625rem;
+            line-height: 2rem;
+        }
+
+        .docs-prose h2 {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+    }
+}
