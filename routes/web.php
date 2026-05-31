@@ -3,13 +3,6 @@
 use App\Actions\Docs\BuildDocsSitemap;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('docs.mortelos.nl')
-    ->get('/{path?}', fn (?string $path = null) => redirect()->away(
-        'https://mortelos.com/docs'.($path ? '/'.ltrim($path, '/') : ''),
-        301,
-    ))
-    ->where('path', '.*');
-
 Route::redirect('/', '/docs');
 Route::redirect('/docs', '/docs/0');
 

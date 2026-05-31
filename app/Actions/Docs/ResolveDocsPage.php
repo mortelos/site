@@ -54,7 +54,7 @@ class ResolveDocsPage
             'title' => (string) ($frontMatter['title'] ?? $slug),
             'description' => (string) ($frontMatter['description'] ?? ''),
             'canonical_path' => $canonicalPath,
-            'canonical_url' => rtrim((string) config('docs.site_url', 'https://mortelos.com'), '/').$canonicalPath,
+            'canonical_url' => rtrim((string) config('docs.site_url', 'https://mortelos.nl'), '/').$canonicalPath,
             'front_matter' => $frontMatter,
             'html' => $rendered['html'],
             'headings' => $rendered['headings'],

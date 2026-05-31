@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://mortelos.com/sitemap.xml
+Sitemap: https://mortelos.nl/sitemap.xml

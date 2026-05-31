@@ -18,7 +18,7 @@ class BuildDocsSitemap
         $version = $this->resolveDocsVersion->execute($version);
         $contentRoot = $this->syncDocsRepository->execute($version);
         $navigation = $this->readJsonFile($contentRoot.DIRECTORY_SEPARATOR.'navigation.json');
-        $siteUrl = rtrim((string) config('docs.site_url', 'https://mortelos.com'), '/');
+        $siteUrl = rtrim((string) config('docs.site_url', 'https://mortelos.nl'), '/');
 
         $writer = new XMLWriter;
         $writer->openMemory();

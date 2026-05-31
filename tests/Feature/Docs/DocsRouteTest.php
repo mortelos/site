@@ -78,7 +78,7 @@ MD);
         config([
             'docs.current_version' => '0',
             'docs.content_path' => $this->docsPath,
-            'docs.site_url' => 'https://mortelos.com',
+            'docs.site_url' => 'https://mortelos.nl',
         ]);
     }
 
@@ -122,8 +122,8 @@ MD);
         $this->get('/docs/0/index')
             ->assertOk()
             ->assertSee('<title>MortelOS Documentation - MortelOS Docs</title>', false)
-            ->assertSee('<link rel="canonical" href="https://mortelos.com/docs/0/index">', false)
-            ->assertSee('<meta property="og:url" content="https://mortelos.com/docs/0/index">', false);
+            ->assertSee('<link rel="canonical" href="https://mortelos.nl/docs/0/index">', false)
+            ->assertSee('<meta property="og:url" content="https://mortelos.nl/docs/0/index">', false);
     }
 
     public function test_sitemap_lists_docs_pages(): void
@@ -131,15 +131,14 @@ MD);
         $this->get('/sitemap.xml')
             ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee('https://mortelos.com/docs/0/index')
-            ->assertSee('https://mortelos.com/docs/0/installation');
+            ->assertSee('https://mortelos.nl/docs/0/index')
+            ->assertSee('https://mortelos.nl/docs/0/installation');
     }
 
-    public function test_docs_subdomain_redirects_to_canonical_docs_path(): void
+    public function test_docs_subdomain_is_not_registered(): void
     {
         $this->get('http://docs.mortelos.nl/0/installation')
-            ->assertRedirect('https://mortelos.com/docs/0/installation')
-            ->assertStatus(301);
+            ->assertNotFound();
     }
 
     public function test_docs_validation_command_passes_for_seeded_content(): void

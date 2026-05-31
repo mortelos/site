@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="{{ $description ?? 'MortelOS public documentation' }}">
-        <link rel="canonical" href="{{ $canonical ?? rtrim((string) config('docs.site_url', 'https://mortelos.com'), '/').'/docs/0' }}">
+        <link rel="canonical" href="{{ $canonical ?? rtrim((string) config('docs.site_url', 'https://mortelos.nl'), '/').'/docs/0' }}">
         <meta property="og:type" content="website">
         <meta property="og:title" content="{{ $title ?? 'MortelOS Docs' }}">
         <meta property="og:description" content="{{ $description ?? 'MortelOS public documentation' }}">
-        <meta property="og:url" content="{{ $canonical ?? rtrim((string) config('docs.site_url', 'https://mortelos.com'), '/').'/docs/0' }}">
+        <meta property="og:url" content="{{ $canonical ?? rtrim((string) config('docs.site_url', 'https://mortelos.nl'), '/').'/docs/0' }}">
 
         <title>{{ $title ?? config('app.name', 'MortelOS').' Docs' }}</title>
 
