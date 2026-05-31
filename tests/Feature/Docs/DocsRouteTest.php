@@ -141,4 +141,28 @@ MD);
             ->assertRedirect('https://mortelos.com/docs/0/installation')
             ->assertStatus(301);
     }
+
+    public function test_docs_validation_command_passes_for_seeded_content(): void
+    {
+        $this->artisan('docs:validate 0')
+            ->expectsOutput('Validated 2 docs pages for version 0.')
+            ->assertExitCode(0);
+    }
+
+    public function test_docs_index_command_writes_search_index_json(): void
+    {
+        $outputPath = storage_path('framework/testing/docs-index.json');
+
+        $this->artisan('docs:index 0 --output='.$outputPath)
+            ->expectsOutput('Docs search index written to '.$outputPath.'.')
+            ->assertExitCode(0);
+
+        $this->assertFileExists($outputPath);
+
+        $index = json_decode(file_get_contents($outputPath), true);
+
+        $this->assertIsArray($index);
+        $this->assertSame('MortelOS Documentation', $index[0]['title']);
+        $this->assertSame('index', $index[0]['slug']);
+    }
 }

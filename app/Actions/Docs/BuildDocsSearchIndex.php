@@ -25,25 +25,53 @@ class BuildDocsSearchIndex
             return [];
         }
 
-        $version = $this->resolveDocsVersion->execute($version);
-        $contentRoot = $this->syncDocsRepository->execute($version);
-        $navigation = $this->readJsonFile($contentRoot.DIRECTORY_SEPARATOR.'navigation.json');
-
-        return collect($navigation['sections'] ?? [])
-            ->flatMap(fn (array $section): array => collect($section['items'] ?? [])
-                ->map(fn (array $item) => $this->searchItem($contentRoot, (string) ($section['title'] ?? ''), $item, $query))
-                ->filter()
-                ->all())
+        return collect($this->all($version))
+            ->filter(fn (array $item): bool => str_contains(Str::lower($item['haystack']), $query))
+            ->map(fn (array $item): array => [
+                'title' => $item['title'],
+                'slug' => $item['slug'],
+                'section' => $item['section'],
+                'excerpt' => $item['excerpt'],
+            ])
             ->values()
             ->take(8)
             ->all();
     }
 
     /**
-     * @param  array<string, mixed>  $item
-     * @return array{title: string, slug: string, section: string, excerpt: string}|null
+     * @return list<array{title: string, slug: string, section: string, excerpt: string, haystack: string}>
      */
-    private function searchItem(string $contentRoot, string $section, array $item, string $query): ?array
+    public function all(string $version): array
+    {
+        $version = $this->resolveDocsVersion->execute($version);
+        $contentRoot = $this->syncDocsRepository->execute($version);
+        $navigation = $this->readJsonFile($contentRoot.DIRECTORY_SEPARATOR.'navigation.json');
+
+        return collect($navigation['sections'] ?? [])
+            ->flatMap(fn (array $section): array => collect($section['items'] ?? [])
+                ->map(fn (array $item) => $this->indexItem($contentRoot, (string) ($section['title'] ?? ''), $item))
+                ->filter()
+                ->all())
+            ->values()
+            ->all();
+    }
+
+    public function write(string $version, ?string $path = null): string
+    {
+        $version = $this->resolveDocsVersion->execute($version);
+        $path ??= storage_path('app/docs/search/'.$version.'.json');
+
+        $this->files->ensureDirectoryExists(dirname($path));
+        $this->files->put($path, json_encode($this->all($version), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL);
+
+        return $path;
+    }
+
+    /**
+     * @param  array<string, mixed>  $item
+     * @return array{title: string, slug: string, section: string, excerpt: string, haystack: string}|null
+     */
+    private function indexItem(string $contentRoot, string $section, array $item): ?array
     {
         $slug = (string) ($item['slug'] ?? '');
         $path = $contentRoot.DIRECTORY_SEPARATOR.$slug.'.md';
@@ -61,15 +89,12 @@ class BuildDocsSearchIndex
             $plainText,
         ]));
 
-        if (! str_contains($haystack, $query)) {
-            return null;
-        }
-
         return [
             'title' => (string) ($frontMatter['title'] ?? $item['title'] ?? $slug),
             'slug' => $slug,
             'section' => $section,
             'excerpt' => Str::limit($plainText, 150),
+            'haystack' => $haystack,
         ];
     }
 
