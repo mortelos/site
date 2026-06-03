@@ -11,36 +11,46 @@
 
 @layer components {
     .docs-prose {
-        color: var(--color-zinc-800);
-        line-height: 1.75;
+        color: var(--color-zinc-700);
+        font-size: 1rem;
+        line-height: 1.8;
     }
 
     .docs-prose h1 {
         color: var(--color-zinc-950);
-        font-size: 2.25rem;
-        font-weight: 650;
-        line-height: 2.5rem;
+        font-size: 2.625rem;
+        font-weight: 680;
+        line-height: 1.12;
         letter-spacing: 0;
     }
 
     .docs-prose h2 {
-        scroll-margin-top: 5rem;
-        border-top: 1px solid var(--color-zinc-200);
+        scroll-margin-top: 6rem;
+        border-top: 1px solid #efe6dc;
         color: var(--color-zinc-950);
         font-size: 1.5rem;
-        font-weight: 650;
+        font-weight: 680;
         line-height: 2rem;
-        margin-top: 2.5rem;
-        padding-top: 2rem;
+        margin-top: 3rem;
+        padding-top: 2.25rem;
     }
 
     .docs-prose h3 {
-        scroll-margin-top: 5rem;
+        scroll-margin-top: 6rem;
         color: var(--color-zinc-950);
         font-size: 1.125rem;
-        font-weight: 650;
+        font-weight: 680;
         line-height: 1.75rem;
-        margin-top: 2rem;
+        margin-top: 2.25rem;
+    }
+
+    .docs-prose h4 {
+        scroll-margin-top: 6rem;
+        color: var(--color-zinc-950);
+        font-size: 1rem;
+        font-weight: 680;
+        line-height: 1.5rem;
+        margin-top: 1.75rem;
     }
 
     .docs-prose p,
@@ -53,16 +63,23 @@
 
     .docs-prose .lead {
         color: var(--color-zinc-600);
-        font-size: 1.0625rem;
-        line-height: 1.75rem;
-        margin-top: .5rem;
+        font-size: 1.125rem;
+        line-height: 1.8rem;
+        margin-top: .75rem;
+        max-width: 42rem;
     }
 
     .docs-prose a {
-        color: var(--color-teal-700);
-        font-weight: 500;
+        color: #e02419;
+        font-weight: 600;
         text-decoration: underline;
-        text-underline-offset: 3px;
+        text-decoration-color: rgb(255 45 32 / .35);
+        text-underline-offset: 4px;
+    }
+
+    .docs-prose a:hover {
+        color: #b91c1c;
+        text-decoration-color: currentColor;
     }
 
     .docs-prose ul {
@@ -85,10 +102,11 @@
         overflow-x: auto;
         border-collapse: collapse;
         font-size: .875rem;
+        line-height: 1.6;
     }
 
     .docs-prose th {
-        background: var(--color-zinc-50);
+        background: #fff7ef;
         color: var(--color-zinc-950);
         font-weight: 600;
         text-align: left;
@@ -96,30 +114,31 @@
 
     .docs-prose th,
     .docs-prose td {
-        border: 1px solid var(--color-zinc-200);
+        border: 1px solid #eadfd4;
         padding: .625rem .75rem;
         vertical-align: top;
     }
 
     .docs-prose :not(pre) > code {
-        border: 1px solid var(--color-zinc-200);
+        border: 1px solid #eadfd4;
         border-radius: .25rem;
-        background: var(--color-zinc-50);
+        background: #fff7ef;
         color: var(--color-zinc-950);
         font-size: .875em;
-        padding: .125rem .25rem;
+        padding: .125rem .3rem;
     }
 
     .docs-prose pre {
         position: relative;
         overflow-x: auto;
-        border: 1px solid var(--color-zinc-800);
+        border: 1px solid #27272a;
         border-radius: .5rem;
-        background: #09090b;
+        background: #111113;
         color: var(--color-zinc-100);
         font-size: .8125rem;
         line-height: 1.65;
-        padding: 1rem;
+        padding: 1.125rem;
+        box-shadow: 0 18px 45px rgb(24 24 27 / .12);
     }
 
     .docs-prose pre code {
@@ -138,12 +157,18 @@
         font-size: .75rem;
         line-height: 1rem;
         padding: .25rem .5rem;
+        transition: background-color .15s ease, border-color .15s ease;
+    }
+
+    .docs-copy-button:hover {
+        border-color: rgb(113 113 122);
+        background: rgb(39 39 42);
     }
 
     @media (max-width: 640px) {
         .docs-prose h1 {
-            font-size: 1.625rem;
-            line-height: 2rem;
+            font-size: 2rem;
+            line-height: 2.35rem;
         }
 
         .docs-prose h2 {

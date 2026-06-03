@@ -16,13 +16,33 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="min-h-screen bg-white font-sans text-zinc-950 antialiased">
+    <body class="min-h-screen bg-[#fffdf8] font-sans text-zinc-950 antialiased">
         {{ $slot }}
 
         @livewireScripts
 
         <script>
-            document.addEventListener('livewire:navigated', () => {
+            const copyDocsText = async (text) => {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+
+                    return;
+                }
+
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'fixed';
+                textarea.style.left = '-9999px';
+                textarea.style.top = '0';
+
+                document.body.append(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                textarea.remove();
+            };
+
+            const setupDocsCopyButtons = () => {
                 document.querySelectorAll('.docs-prose pre').forEach((block) => {
                     if (block.dataset.copyReady === 'true') {
                         return;
@@ -35,8 +55,13 @@
                     button.className = 'docs-copy-button';
                     button.textContent = 'Copy';
                     button.addEventListener('click', async () => {
-                        await navigator.clipboard.writeText(block.querySelector('code')?.innerText ?? '');
-                        button.textContent = 'Copied';
+                        try {
+                            await copyDocsText(block.querySelector('code')?.innerText ?? '');
+                            button.textContent = 'Copied';
+                        } catch {
+                            button.textContent = 'Failed';
+                        }
+
                         window.setTimeout(() => {
                             button.textContent = 'Copy';
                         }, 1200);
@@ -44,7 +69,10 @@
 
                     block.append(button);
                 });
-            });
+            };
+
+            document.addEventListener('DOMContentLoaded', setupDocsCopyButtons);
+            document.addEventListener('livewire:navigated', setupDocsCopyButtons);
         </script>
     </body>
 </html>
