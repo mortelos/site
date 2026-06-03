@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Docs;
 
+use App\Actions\Docs\BuildDocsSearchIndex;
 use Illuminate\Filesystem\Filesystem;
 use Tests\TestCase;
 
@@ -115,6 +116,22 @@ MD);
         $this->get('/docs/0/index?q=starter')
             ->assertOk()
             ->assertSee('Installation');
+    }
+
+    public function test_docs_search_matches_terms_across_punctuation(): void
+    {
+        $results = app(BuildDocsSearchIndex::class)->execute('0', 'capability first');
+
+        $this->assertSame('index', $results[0]['slug']);
+        $this->assertStringContainsString('Use a capability-first build flow.', $results[0]['excerpt']);
+        $this->assertStringNotContainsString('#', $results[0]['excerpt']);
+    }
+
+    public function test_docs_search_matches_multiple_terms_without_exact_phrase_order(): void
+    {
+        $results = app(BuildDocsSearchIndex::class)->execute('0', 'starter install');
+
+        $this->assertSame('installation', $results[0]['slug']);
     }
 
     public function test_docs_page_includes_seo_metadata(): void

@@ -12,6 +12,7 @@ class BuildDocsSearchIndex
         private readonly Filesystem $files,
         private readonly ResolveDocsVersion $resolveDocsVersion,
         private readonly SyncDocsRepository $syncDocsRepository,
+        private readonly RenderDocsMarkdown $renderDocsMarkdown,
     ) {}
 
     /**
@@ -19,14 +20,19 @@ class BuildDocsSearchIndex
      */
     public function execute(string $version, string $query): array
     {
-        $query = Str::lower(trim($query));
+        $tokens = $this->searchTokens($query);
 
-        if ($query === '') {
+        if ($tokens === []) {
             return [];
         }
 
         return collect($this->all($version))
-            ->filter(fn (array $item): bool => str_contains(Str::lower($item['haystack']), $query))
+            ->map(fn (array $item): array => [
+                ...$item,
+                'score' => $this->score($item, $tokens),
+            ])
+            ->filter(fn (array $item): bool => $item['score'] > 0)
+            ->sortByDesc('score')
             ->map(fn (array $item): array => [
                 'title' => $item['title'],
                 'slug' => $item['slug'],
@@ -39,7 +45,7 @@ class BuildDocsSearchIndex
     }
 
     /**
-     * @return list<array{title: string, slug: string, section: string, excerpt: string, haystack: string}>
+     * @return list<array{title: string, slug: string, section: string, excerpt: string, haystack: string, title_haystack: string, slug_haystack: string, section_haystack: string}>
      */
     public function all(string $version): array
     {
@@ -69,7 +75,7 @@ class BuildDocsSearchIndex
 
     /**
      * @param  array<string, mixed>  $item
-     * @return array{title: string, slug: string, section: string, excerpt: string, haystack: string}|null
+     * @return array{title: string, slug: string, section: string, excerpt: string, haystack: string, title_haystack: string, slug_haystack: string, section_haystack: string}|null
      */
     private function indexItem(string $contentRoot, string $section, array $item): ?array
     {
@@ -81,21 +87,91 @@ class BuildDocsSearchIndex
         }
 
         [$frontMatter, $markdown] = $this->parseMarkdownFile($path);
-        $plainText = trim(preg_replace('/\s+/', ' ', strip_tags($markdown)) ?? '');
-        $haystack = Str::lower(implode(' ', [
-            $frontMatter['title'] ?? '',
-            $frontMatter['description'] ?? '',
+        $plainText = $this->plainText($this->stripDocumentTitle($markdown));
+        $title = (string) ($frontMatter['title'] ?? $item['title'] ?? $slug);
+        $description = (string) ($frontMatter['description'] ?? '');
+        $haystack = $this->searchableText(implode(' ', [
+            $title,
+            $description,
             $section,
+            $slug,
             $plainText,
         ]));
 
         return [
-            'title' => (string) ($frontMatter['title'] ?? $item['title'] ?? $slug),
+            'title' => $title,
             'slug' => $slug,
             'section' => $section,
             'excerpt' => Str::limit($plainText, 150),
             'haystack' => $haystack,
+            'title_haystack' => $this->searchableText($title),
+            'slug_haystack' => $this->searchableText($slug),
+            'section_haystack' => $this->searchableText($section),
         ];
+    }
+
+    private function plainText(string $markdown): string
+    {
+        $html = $this->renderDocsMarkdown->execute($markdown)['html'];
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5);
+
+        return trim(preg_replace('/\s+/', ' ', $text) ?? '');
+    }
+
+    private function stripDocumentTitle(string $markdown): string
+    {
+        return preg_replace('/\A\s*#\s+.+\R{1,2}/u', '', $markdown, 1) ?? $markdown;
+    }
+
+    private function searchableText(string $text): string
+    {
+        $text = Str::lower(Str::ascii($text));
+        $text = preg_replace('/[^a-z0-9]+/', ' ', $text) ?? '';
+
+        return trim(preg_replace('/\s+/', ' ', $text) ?? '');
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function searchTokens(string $query): array
+    {
+        return collect(explode(' ', $this->searchableText($query)))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array{haystack: string, title_haystack: string, slug_haystack: string, section_haystack: string}  $item
+     * @param  list<string>  $tokens
+     */
+    private function score(array $item, array $tokens): int
+    {
+        $score = 0;
+
+        foreach ($tokens as $token) {
+            if (! str_contains($item['haystack'], $token)) {
+                return 0;
+            }
+
+            $score += substr_count($item['haystack'], $token);
+
+            if (str_contains($item['title_haystack'], $token)) {
+                $score += 8;
+            }
+
+            if (str_contains($item['slug_haystack'], $token)) {
+                $score += 5;
+            }
+
+            if (str_contains($item['section_haystack'], $token)) {
+                $score += 3;
+            }
+        }
+
+        return $score;
     }
 
     /**
