@@ -41,7 +41,8 @@ class SyncDocsRepository
             $this->run(['git', '--git-dir='.$mirrorPath, 'remote', 'update', '--prune']);
         }
 
-        $commit = trim($this->run(['git', '--git-dir='.$mirrorPath, 'rev-parse', 'refs/heads/'.$version]));
+        $branch = (string) config('docs.version_branches.'.$version, $version);
+        $commit = trim($this->run(['git', '--git-dir='.$mirrorPath, 'rev-parse', 'refs/heads/'.$branch]));
         $worktreePath = $worktreesPath.DIRECTORY_SEPARATOR.$commit;
 
         if (! $this->files->isDirectory($worktreePath)) {

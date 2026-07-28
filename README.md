@@ -2,7 +2,7 @@
 
 Public MortelOS website and documentation app.
 
-The docs surface is served at `/docs/0/{slug}` and reads Markdown from the `0` branch of `mortelos/docs`.
+The docs surface is served at `/docs/0/{slug}` and reads Markdown from `mortelos/docs`. Each docs version maps to a branch through `docs.version_branches` in `config/docs.php`; version `0` tracks `main` until a v1 ships and version `0` is frozen on its own branch. Versions without an entry read the branch of the same name.
 
 ## Stack Decisions
 
