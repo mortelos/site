@@ -1,0 +1,42 @@
+name: Docs content
+
+# De live site leest bij elke request uit de main-branch van mortelos/docs, dus
+# een wijziging daar raakt productie zonder dat er een deploy aan te pas komt.
+# De tests in ci.yml draaien tegen een lokale fixture en zien dat nooit; deze
+# workflow valideert de daadwerkelijk gepubliceerde content.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validate:
+    name: Validate published docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+          touch database/database.sqlite
+
+      # Bewust zonder DOCS_CONTENT_PATH: .env.example laat die leeg, waardoor de
+      # app mortelos/docs kloont in plaats van een fixture te lezen.
+      - name: Validate published docs content
+        run: php artisan docs:validate 0
