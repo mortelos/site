@@ -37,6 +37,32 @@ DOCS_CONTENT_PATH=/Users/uteq/Sites/mortelos-docs/mortelos/docs
 
 Without `DOCS_CONTENT_PATH`, the app clones `https://github.com/mortelos/docs.git` into `storage/app/docs` and checks out immutable worktrees by commit SHA.
 
+## Deployment
+
+The Forge deploy script is a bootstrap that calls into this repository:
+
+```bash
+$CREATE_RELEASE()
+set -e
+cd $FORGE_RELEASE_DIRECTORY
+bash .forge/build.sh
+$ACTIVATE_RELEASE()
+$RESTART_QUEUES()
+bash .forge/verify.sh
+```
+
+Everything else lives in `.forge/`, under version control:
+
+1. `.forge/build.sh` runs before activation, so anything failing there keeps the release from going live — including `docs:validate 0` against the published docs repository.
+2. `.forge/verify.sh` runs after activation and fails the deploy when the site does not serve a 200. Point `SMOKE_URL` at a failing URL to confirm the check can still turn red.
+
+Two Forge details decide that split:
+
+1. `$CREATE_RELEASE()`, `$ACTIVATE_RELEASE()` and `$RESTART_QUEUES()` are textual substitutions Forge applies to its own script field. They are syntax errors in an ordinary shell file, so they cannot move into this repository.
+2. `FORGE_PHP`, `FORGE_COMPOSER`, `FORGE_RELEASE_DIRECTORY` and the other `FORGE_*` values are real exported environment variables, so scripts in `.forge/` read them without any plumbing.
+
+Forge cannot source its deploy script from a repository, so that bootstrap is the one part that has to be edited in Forge itself. Quick deploy is off: pushing does not deploy.
+
 ## Verification
 
 ```bash
