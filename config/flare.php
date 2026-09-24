@@ -2,31 +2,15 @@
 
 use Spatie\FlareClient\Enums\CollectType;
 use Spatie\LaravelFlare\Enums\LaravelCollectType;
-use Spatie\LaravelFlare\FlareConfig;
 
 return [
     'key' => env('FLARE_KEY'),
 
-    'collects' => FlareConfig::defaultCollects(
-        ignore: [
-            CollectType::Requests,
-            CollectType::Queries,
-            CollectType::Dumps,
-            CollectType::Jobs,
-            CollectType::Context,
-            CollectType::Commands,
-            CollectType::Cache,
-            CollectType::Filesystem,
-            CollectType::ExternalHttp,
-            CollectType::RedisCommands,
-            CollectType::Notifications,
-            CollectType::LogsWithErrors,
-            CollectType::StackFrameArguments,
-            LaravelCollectType::LivewireComponents,
-            LaravelCollectType::LaravelContext,
-            LaravelCollectType::ExceptionContext,
-        ],
-    ),
+    'collects' => [
+        CollectType::ErrorsWithTraces->value => ['with_traces' => false],
+        CollectType::GitInfo->value => ['use_process' => false],
+        LaravelCollectType::HandledExceptions->value => [],
+    ],
 
     'censor' => [
         'body_fields' => ['*'],
