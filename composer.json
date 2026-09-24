@@ -11,6 +11,7 @@
         "laravel/tinker": "^3.0",
         "league/commonmark": "^2.8",
         "livewire/livewire": "^4.0",
+        "spatie/laravel-flare": "^3.2",
         "symfony/yaml": "^8.0"
     },
     "require-dev": {
@@ -84,6 +85,9 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "laravel/vet": true
+        },
+        "platform": {
+            "php": "8.4.16"
         }
     },
     "minimum-stability": "stable",

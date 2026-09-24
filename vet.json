@@ -177,6 +177,30 @@
             "version": "4.9.2",
             "hash": "tree-v2:fee83eba0ad9d30e88bf707cd5df7f5152085727018fce5e223e38fbced97ac3"
         },
+        "spatie/backtrace": {
+            "version": "1.8.2",
+            "hash": "tree-v2:4f33e38138383ac77d64aca8cddf65a1d3e9357eb0613965a01dfdc9c7fbce88"
+        },
+        "spatie/flare-client-php": {
+            "version": "3.5.1",
+            "hash": "tree-v2:953e9ba73004a7c1a1d70897ea8ab83251767453aeb46e65c76b8be72d3e3e0f"
+        },
+        "spatie/flare-daemon": {
+            "version": "0.3.1",
+            "hash": "tree-v2:4204d60303359e53f36acf3af38d65ac768bd405b77992a2576aaef7d9aea60f"
+        },
+        "spatie/laravel-error-share": {
+            "version": "1.0.10",
+            "hash": "tree-v2:40fa1e127cde853861c85b13b687d39b74a392da547b8ca5a5bc98bc92bbb35e"
+        },
+        "spatie/laravel-flare": {
+            "version": "3.6.1",
+            "hash": "tree-v2:e96c28e073b1372434c90112443343d77067c884337567d3c5f55ea52e376de2"
+        },
+        "spatie/laravel-package-tools": {
+            "version": "1.93.2",
+            "hash": "tree-v2:6769b3e837b78c65b97c797c7b88eb3e0ebaa4e47e91a186f26226d25fa02198"
+        },
         "symfony/clock": {
             "version": "v8.1.0",
             "hash": "tree-v2:7888f31d60c29c4f777204510e9a60a557c98a4e480efe5d9eb13dd617bf21f1"
