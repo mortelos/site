@@ -31,7 +31,11 @@ jobs:
           cache: npm
 
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+        run: |
+          composer config --global http-basic.packages.mortelos.com uteq "$MORTELOS_REGISTRY_TOKEN"
+          composer install --no-interaction --prefer-dist --no-progress
+        env:
+          MORTELOS_REGISTRY_TOKEN: ${{ secrets.MORTELOS_REGISTRY_TOKEN }}
 
       - name: Prepare Laravel
         run: |

@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Vaste dev-login, gelijk op al onze sites. Het bekende wachtwoord
-        // mag nooit op productie staan.
+        // Keep the same fixed development login across all sites. Never use
+        // the known password in production.
         User::updateOrCreate(
             ['email' => 'admin@example.test'],
             [

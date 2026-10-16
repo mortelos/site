@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b65a521cf4782fea3b11141dddb9a67a",
+    "content-hash": "813a07f4008622b00d7e27685b1c2368",
     "packages": [
         {
             "name": "brick/math",
@@ -7219,6 +7219,41 @@
                 "source": "https://github.com/mockery/mockery"
             },
             "time": "2024-05-16T03:13:13+00:00"
+        },
+        {
+            "name": "mortelos/dev-tools",
+            "version": "0.1.8",
+            "dist": {
+                "type": "zip",
+                "url": "https://packages.mortelos.com/dist/mortelos/dev-tools/0.1.8.zip",
+                "reference": "a2f2bffab9247bd590b0a247024ae1a91fdc0741",
+                "shasum": "1c7279f9b4a493c5afd457b0d3ba70bec60185cc"
+            },
+            "require": {
+                "illuminate/console": "^13.0",
+                "illuminate/filesystem": "^13.0",
+                "illuminate/routing": "^13.0",
+                "illuminate/support": "^13.0",
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mortelos\\DevTools\\MortelosDevToolsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mortelos\\DevTools\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Developer tooling for MortelOS package-ready feature decisions",
+            "time": "2026-10-16T06:21:55+02:00"
         },
         {
             "name": "myclabs/deep-copy",
