@@ -32,10 +32,10 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer config --global http-basic.packages.mortelos.com uteq "$MORTELOS_REGISTRY_TOKEN"
           composer install --no-interaction --prefer-dist --no-progress
         env:
-          MORTELOS_REGISTRY_TOKEN: ${{ secrets.MORTELOS_REGISTRY_TOKEN }}
+          # Credential via env only, so nothing is written to disk on the shared runner.
+          COMPOSER_AUTH: '{"http-basic":{"packages.mortelos.com":{"username":"uteq","password":"${{ secrets.MORTELOS_REGISTRY_TOKEN }}"}}}'
 
       - name: Prepare Laravel
         run: |
