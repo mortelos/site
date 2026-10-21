@@ -3,6 +3,7 @@
 namespace App\Actions\Docs;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Cache;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -37,8 +38,16 @@ class SyncDocsRepository
 
         if (! $this->files->isDirectory($mirrorPath)) {
             $this->run(['git', 'clone', '--mirror', $repositoryUrl, $mirrorPath]);
+        } elseif (app()->runningInConsole()) {
+            $this->fetch($mirrorPath);
         } else {
-            $this->run(['git', '--git-dir='.$mirrorPath, 'remote', 'update', '--prune']);
+            // A fetch from GitHub costs ~0.4 s, so web requests serve the local
+            // mirror and refresh it after the response, at most once a minute.
+            \Illuminate\Support\defer(function () use ($mirrorPath): void {
+                if (Cache::lock('docs-mirror-fetch', 60)->get()) {
+                    $this->fetch($mirrorPath);
+                }
+            });
         }
 
         $branch = (string) config('docs.version_branches.'.$version, $version);
@@ -57,6 +66,11 @@ class SyncDocsRepository
         }
 
         return $contentRoot;
+    }
+
+    private function fetch(string $mirrorPath): void
+    {
+        $this->run(['git', '--git-dir='.$mirrorPath, 'remote', 'update', '--prune']);
     }
 
     /**

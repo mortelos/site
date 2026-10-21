@@ -3,6 +3,7 @@
 namespace App\Actions\Docs;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 
@@ -51,6 +52,21 @@ class BuildDocsSearchIndex
     {
         $version = $this->resolveDocsVersion->execute($version);
         $contentRoot = $this->syncDocsRepository->execute($version);
+
+        // A synced content root is one commit and never changes, so its index
+        // is built once instead of on every search keystroke (~0.3 s).
+        if (config('docs.content_path')) {
+            return $this->buildIndex($contentRoot);
+        }
+
+        return Cache::rememberForever('docs-search-index:'.$contentRoot, fn (): array => $this->buildIndex($contentRoot));
+    }
+
+    /**
+     * @return list<array{title: string, slug: string, section: string, excerpt: string, haystack: string, title_haystack: string, slug_haystack: string, section_haystack: string}>
+     */
+    private function buildIndex(string $contentRoot): array
+    {
         $navigation = $this->readJsonFile($contentRoot.DIRECTORY_SEPARATOR.'navigation.json');
 
         return collect($navigation['sections'] ?? [])
