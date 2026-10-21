@@ -4,6 +4,7 @@ namespace Tests\Feature\Docs;
 
 use App\Actions\Docs\SyncDocsRepository;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Defer\DeferredCallbackCollection;
 use Illuminate\Support\Facades\Process;
 use RuntimeException;
 use Tests\TestCase;
@@ -60,6 +61,22 @@ class SyncDocsRepositoryTest extends TestCase
         $this->expectException(RuntimeException::class);
 
         app(SyncDocsRepository::class)->execute('9');
+    }
+
+    public function test_web_requests_serve_the_mirror_and_fetch_after_the_response(): void
+    {
+        $sync = app(SyncDocsRepository::class);
+        $firstRoot = $sync->execute('0');
+
+        app(Filesystem::class)->put($this->workspace.'/source/mortelos/docs/index.md', "# Changed\n");
+        $this->git($this->workspace.'/source', ['commit', '-am', 'Change docs content']);
+        (fn () => $this->isRunningInConsole = false)->call($this->app);
+
+        $this->assertSame($firstRoot, $sync->execute('0'));
+
+        app(DeferredCallbackCollection::class)->invoke();
+
+        $this->assertNotSame($firstRoot, $sync->execute('0'));
     }
 
     /**
