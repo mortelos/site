@@ -21,7 +21,7 @@
 
         @livewireScripts
 
-        <script>
+        <script data-navigate-once>
             const copyDocsText = async (text) => {
                 if (navigator.clipboard && window.isSecureContext) {
                     await navigator.clipboard.writeText(text);
