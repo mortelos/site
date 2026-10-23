@@ -376,8 +376,8 @@
             "hash": "tree-v2:c6cb44811fb2674feeac51789852447cc0148c22f87a4557f608cd0d3f238836"
         },
         "mortelos/dev-tools": {
-            "version": "0.1.8",
-            "hash": "tree-v2:25ac006d913fa3a4276a72374e4e81ec5bfd2d1c384e62b6557ac43891c3589b"
+            "version": "0.6.0",
+            "hash": "tree-v2:01bc1f5b847720061b52aa558b7b4b0c927ab61d33f6c26419c372a2516ff091"
         },
         "myclabs/deep-copy": {
             "version": "1.13.4",
