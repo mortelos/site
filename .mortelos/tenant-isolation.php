@@ -6,8 +6,8 @@ return [
     'app/Models/User.php' => [
         'model-declaration' => [
             'count' => 1,
-            'reason' => 'The public site uses one central database and the default users table, with no tenant switching. Its locked dependencies do not include stancl/tenancy, so CentralConnection cannot be used without adding a dependency.',
-            'issue' => 'https://github.com/mortelos/site/issues/11',
+            'reason' => 'Permanent: The public site uses one database and the default users table, has no tenants, and has no stancl/tenancy in its locked dependencies. Revisit when the site adopts tenancy.',
+            'issue' => 'https://github.com/mortelos/dev-tools/issues/20',
         ],
     ],
     'database/factories/UserFactory.php' => [
