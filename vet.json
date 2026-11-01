@@ -98,8 +98,8 @@
             "hash": "tree-v2:227c217ed67b9cd48cc589867bf18379e95858e068724b8fbef94713311b024e"
         },
         "livewire/livewire": {
-            "version": "v4.3.0",
-            "hash": "tree-v2:106072c79a8686b21c95768115ed09446175f7023238b9b429bf1381e5d971a5"
+            "version": "v4.4.8",
+            "hash": "tree-v2:ba227b9c0fa25ee3d5ea715216a41bf70d845016dbf25a3cb2cde91e7e4b3014"
         },
         "monolog/monolog": {
             "version": "3.10.0",
